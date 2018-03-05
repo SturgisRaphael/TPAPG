@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <array>
 #include "supplier.h"
 #include "service.h"
 
@@ -8,7 +9,8 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     ifstream input;
-    input.open( "D:\\Raphael\\Programing\\Git\\TPAPG\\Test\\BildeKrarup\\B\\B1.1" );
+    //input.open( "../Test/BildeKrarup/B/B1.1" );//D:\Raphael\Programing\Git\TPAPG
+    input.open( "../Test/test" );
     string line, nameOfService;
     int numberOfSuppliers, numberOfClients, id, costOpening, tmp;
 
@@ -33,19 +35,25 @@ int main(int argc, char* argv[]) {
     {
         istringstream iss(line);
         iss >> id >> costOpening;
-        for(int i = 0; iss; i++)
+        for(int j = 0; iss; j++)
         {
-            iss >> costConnexions[i];
+            iss >> costConnexions[j];
         }
 
-        supplier supplierI(id, costOpening, costConnexions);
+        supplier supplierI = supplier(id, costOpening, costConnexions);
 
-        service1.setSupplier(i, supplierI);
+        service1.setSupplier(i, supplier(id, costOpening, costConnexions));
     }
 
-    service1.openSupplier(3);
-    service1.openSupplier(1);
-    service1.openSupplier(2);
+    /*
+    service1.openSupplier(10);
+    service1.openSupplier(13);
+    service1.openSupplier(14);
+    service1.openSupplier(32);
+    service1.openSupplier(43);
+*/
+    service1.openSupplier(0);
+    //service1.gloutonSolver();
 
     cout << service1.evaluate() << endl;
 

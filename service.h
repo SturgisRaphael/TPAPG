@@ -8,6 +8,7 @@
 
 #include <cstdlib>
 #include <ostream>
+#include <array>
 #include "supplier.h"
 
 class service {
@@ -36,12 +37,21 @@ public:
 
     int evaluate();
 
+    int evaluate(int *O, int size);
+
+    void closeAllSupplier();
+
+    void closeSupplier(int i);
+
+    void gloutonSolver();
+
+    int *getO();
+
 private:
     int numberOfSuppliers;
     int numberOfClients;
     supplier* suppliers;
 
-    void closeSupplier(int i);
 };
 
 #endif //TPAPG_SERVICE_H

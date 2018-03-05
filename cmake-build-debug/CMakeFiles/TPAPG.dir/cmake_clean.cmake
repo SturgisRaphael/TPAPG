@@ -1,11 +1,9 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/TPAPG.dir/main.cpp.obj"
-  "CMakeFiles/TPAPG.dir/service.cpp.obj"
-  "CMakeFiles/TPAPG.dir/supplier.cpp.obj"
+  "CMakeFiles/TPAPG.dir/main.cpp.o"
+  "CMakeFiles/TPAPG.dir/service.cpp.o"
+  "CMakeFiles/TPAPG.dir/supplier.cpp.o"
   "TPAPG.pdb"
-  "TPAPG.exe"
-  "TPAPG.exe.manifest"
-  "libTPAPG.dll.a"
+  "TPAPG"
 )
 
 # Per-language clean rules from dependency scanning.

@@ -1,6 +1,7 @@
 //
 // Created by Raphael on 3/4/2018.
 //
+#include <array>
 #include "service.h"
 service::service(int numberOfSuppliers, int numberOfClients) : numberOfSuppliers(numberOfSuppliers),
                                                                numberOfClients(numberOfClients) {
@@ -47,25 +48,6 @@ std::ostream &operator<<(std::ostream &os, const service &service1) {
     return os;
 }
 
-int service::evaluate(){
-    int result = 0;
-    for(int i = 0; i < numberOfSuppliers; i++) {
-        if(suppliers[i].isOpen())
-            result += suppliers[i].getOpeningCost();
-    }
-    for(int j = 0; j < numberOfClients; j++)
-    {
-        int min = suppliers[0].getConnexionCost(j);
-        for(int k = 0; k < numberOfSuppliers; k++){
-            if(min > suppliers[k].getConnexionCost(j) && suppliers[k].isOpen())
-                min = suppliers[k].getConnexionCost(j);
-        }
-        result += min;
-    }
-
-    return result;
-}
-
 const supplier service::getSupplier(int i)const {
     return suppliers[i];
 }
@@ -77,4 +59,80 @@ void service::openSupplier(int i) {
 void service::closeSupplier(int i){
     suppliers[i].setOpen(false);
 }
+
+int service::evaluate(int *O, int size){
+    int result = 0;
+
+    for(int i = 0; i < size; i++){
+        result += suppliers[O[i]].getOpeningCost();
+        printf("%d, ", O[i]);
+    }
+    printf("\n");
+
+    for(int j = 0; j < numberOfClients; j++){
+        int min = suppliers[0].getConnexionCost(j);
+        for(int i = 0; i < size; i++){
+            if(min > suppliers[O[i]].getConnexionCost(j))
+                min = suppliers[O[i]].getConnexionCost(j);
+        }
+        result += min;
+    }
+
+
+    return result;
+}
+
+int service::evaluate(){
+    int result = 0;
+    printf("numberOfSuppliers = %d\n", numberOfSuppliers);
+    for(int i = 0; i < numberOfSuppliers; i++) {
+        if(suppliers[i].isOpen())
+            result += suppliers[i].getOpeningCost();
+    }
+    for(int j = 0; j < numberOfClients; j++)
+    {
+        int min = 1000000000;
+        for(int k = 0; k < numberOfSuppliers; k++){
+            if((min > suppliers[k].getConnexionCost(j)) && suppliers[k].isOpen())
+                min = suppliers[k].getConnexionCost(j);
+        }
+        printf("min = %d\n", min);
+        result += min;
+    }
+
+    return result;
+}
+
+void service::gloutonSolver() {
+    closeAllSupplier();
+    int optiEval = 0;
+    for(int i = 0; i < numberOfSuppliers; i++) {
+        openSupplier(i);
+        if (optiEval > evaluate())
+            closeSupplier(i);
+    }
+}
+
+void service::closeAllSupplier() {
+    for(int i = 0; i < numberOfSuppliers; i++)
+        closeSupplier(i);
+}
+
+int *service::getO() {
+    int count = 0;
+    for(int i = 0; i < numberOfSuppliers; i++)
+        if(suppliers[i].isOpen())
+            count++;
+    int O[count];
+
+    count = 0;
+    for(int i = 0; i < numberOfSuppliers; i++)
+        if(suppliers[i].isOpen()){
+            count++;
+            O[count] = i;
+        }
+
+    return 0;
+}
+
 
