@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/Raphael/Programing/Git/TPAPG/main.cpp
+iostream
+-
+fstream
+-
+sstream
+-
+supplier.h
+D:/Raphael/Programing/Git/TPAPG/supplier.h
+service.h
+D:/Raphael/Programing/Git/TPAPG/service.h
+
+D:/Raphael/Programing/Git/TPAPG/service.cpp
+service.h
+D:/Raphael/Programing/Git/TPAPG/service.h
+
+D:/Raphael/Programing/Git/TPAPG/service.h
+cstdlib
+-
+ostream
+-
+supplier.h
+D:/Raphael/Programing/Git/TPAPG/supplier.h
+
+D:/Raphael/Programing/Git/TPAPG/supplier.cpp
+supplier.h
+D:/Raphael/Programing/Git/TPAPG/supplier.h
+
+D:/Raphael/Programing/Git/TPAPG/supplier.h
+ostream
+-
+
