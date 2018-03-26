@@ -10,6 +10,9 @@
 #include <ostream>
 #include <array>
 #include "supplier.h"
+#include <vector>
+
+using namespace std;
 
 class service {
 public:
@@ -43,15 +46,26 @@ public:
 
     void closeSupplier(int i);
 
-    void gloutonSolver();
+    void Algorithm1();
+
+    void Algorithm2();
 
     int *getO();
+
+    void printO();
 
 private:
     int numberOfSuppliers;
     int numberOfClients;
     supplier* suppliers;
 
+    double beta(int i, vector<int> S);
+
+    double beta(int i, vector<int> S, vector<int> T);
+
+    int beta(int i, vector<int> S, vector<int> T, vector<int> O);
+
+    int beta(int i, vector<int> S, vector<int> T, vector<int> Y, vector<int> O);
 };
 
 #endif //TPAPG_SERVICE_H

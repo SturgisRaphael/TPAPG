@@ -25,6 +25,7 @@ void supplier::setOpeningCost(int openingCost) {
 
 std::ostream &operator<<(std::ostream &os, const supplier &supplier1) {
     os << "id: " << supplier1.id << " openingCost: " << supplier1.openingCost;
+
     return os;
 }
 

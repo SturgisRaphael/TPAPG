@@ -9,8 +9,10 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     ifstream input;
-    //input.open( "../Test/BildeKrarup/B/B1.1" );//D:\Raphael\Programing\Git\TPAPG
-    input.open( "../Test/test" );
+    //input.open( "../Test/BildeKrarup/B/B1.1" );
+    input.open("D:\\Raphael\\Programing\\Git\\TPAPG\\Test\\BildeKrarup\\B\\B1.2");
+    //input.open( "../Test/test" );
+    //input.open("D:\\Raphael\\Programing\\Git\\TPAPG\\Test\\test");
     string line, nameOfService;
     int numberOfSuppliers, numberOfClients, id, costOpening, tmp;
 
@@ -29,10 +31,11 @@ int main(int argc, char* argv[]) {
 
     getline( input, line );
 
-    int costConnexions[numberOfClients];
+    int *costConnexions;
 
     for( int i = 0; getline( input, line ); i++)
     {
+        costConnexions = static_cast<int *>(malloc(numberOfClients * sizeof(int)));
         istringstream iss(line);
         iss >> id >> costOpening;
         for(int j = 0; iss; j++)
@@ -45,17 +48,11 @@ int main(int argc, char* argv[]) {
         service1.setSupplier(i, supplier(id, costOpening, costConnexions));
     }
 
-    /*
-    service1.openSupplier(10);
-    service1.openSupplier(13);
-    service1.openSupplier(14);
-    service1.openSupplier(32);
-    service1.openSupplier(43);
-*/
-    service1.openSupplier(0);
-    //service1.gloutonSolver();
+    service1.Algorithm1();
 
-    cout << service1.evaluate() << endl;
+    service1.printO();
+
+    cout << "evaluate: " << service1.evaluate() << endl;
 
     return 0;
 }

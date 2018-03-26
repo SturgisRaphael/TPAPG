@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/raphael/git/TPAPG/main.cpp
+D:/Raphael/Programing/Git/TPAPG/main.cpp
 iostream
 -
 fstream
@@ -16,17 +16,21 @@ sstream
 array
 -
 supplier.h
-/home/raphael/git/TPAPG/supplier.h
+D:/Raphael/Programing/Git/TPAPG/supplier.h
 service.h
-/home/raphael/git/TPAPG/service.h
+D:/Raphael/Programing/Git/TPAPG/service.h
 
-/home/raphael/git/TPAPG/service.cpp
+D:/Raphael/Programing/Git/TPAPG/service.cpp
 array
 -
+iostream
+-
+cmath
+-
 service.h
-/home/raphael/git/TPAPG/service.h
+D:/Raphael/Programing/Git/TPAPG/service.h
 
-/home/raphael/git/TPAPG/service.h
+D:/Raphael/Programing/Git/TPAPG/service.h
 cstdlib
 -
 ostream
@@ -34,13 +38,13 @@ ostream
 array
 -
 supplier.h
-/home/raphael/git/TPAPG/supplier.h
+D:/Raphael/Programing/Git/TPAPG/supplier.h
 
-/home/raphael/git/TPAPG/supplier.cpp
+D:/Raphael/Programing/Git/TPAPG/supplier.cpp
 supplier.h
-/home/raphael/git/TPAPG/supplier.h
+D:/Raphael/Programing/Git/TPAPG/supplier.h
 
-/home/raphael/git/TPAPG/supplier.h
+D:/Raphael/Programing/Git/TPAPG/supplier.h
 ostream
 -
 
