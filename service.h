@@ -50,7 +50,7 @@ public:
 
     void Algorithm2();
 
-    int *getO();
+    vector<int> getO();
 
     void printO();
 
@@ -59,13 +59,16 @@ private:
     int numberOfClients;
     supplier* suppliers;
 
-    double beta(int i, vector<int> S);
+    double beta(int i, vector<int> S, vector<int> T, vector<int> Y, vector<int> O);
+    void sort(vector<int> *S, int left, int right);
 
-    double beta(int i, vector<int> S, vector<int> T);
+    void sort(vector<int> S, int left, int right);
 
-    int beta(int i, vector<int> S, vector<int> T, vector<int> O);
+    void sort(vector<int> S, int left, int right, int f);
 
-    int beta(int i, vector<int> S, vector<int> T, vector<int> Y, vector<int> O);
+    double beta(int i, vector<int> S, vector<int> T, vector<int> O);
+
+    double betaConst(int i, vector<int> T, vector<int> O);
 };
 
 #endif //TPAPG_SERVICE_H

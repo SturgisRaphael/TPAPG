@@ -6,6 +6,8 @@
 #include <cmath>
 #include "service.h"
 #include <vector>
+#include <algorithm>
+
 service::service(int numberOfSuppliers, int numberOfClients) : numberOfSuppliers(numberOfSuppliers),
                                                                numberOfClients(numberOfClients) {
     this->suppliers= static_cast<supplier *>(malloc(numberOfSuppliers * sizeof(supplier)));
@@ -142,28 +144,28 @@ void service::closeAllSupplier() {
         closeSupplier(i);
 }
 
-int *service::getO() {
+vector<int> service::getO() {
     int count = 0;
     for (int i = 0; i < numberOfSuppliers; i++)
         if (suppliers[i].isOpen())
             count++;
-    int *O = static_cast<int *>(malloc(sizeof(int) * (count + 1)));
+    vector<int> O;
 
     printf("count = %d\n", count);
     count = 0;
     for (int i = 0; i < numberOfSuppliers; i++)
         if (suppliers[i].isOpen()) {
-            O[count] = i;
+            O.push_back(i);
             count++;
         }
 
-    O[count] = -1;
+    O.push_back(-1);
 
     return O;
 }
 
 void service::printO() {
-    int *O = getO();
+    vector<int> O = getO();
     int i = 0;
 
     while (O[i] != -1) {
@@ -171,11 +173,11 @@ void service::printO() {
         i++;
     }
     printf("\n");
-    free(O);
 }
 void service::Algorithm2() {
     closeAllSupplier();
     vector<int> S;
+    vector<int> T;
     int nbUnaffectedClients = numberOfClients;
 
     for(int i = 0; i < numberOfClients; i++)
@@ -184,8 +186,10 @@ void service::Algorithm2() {
     while(nbUnaffectedClients > 0){
         int alpha = INFINITY;
         int beta = INFINITY;
+        vector<int> betaY;
         int alphaIndex = -1;
         int betaIndex = -1;
+        double tmp;
         for(int i = 0; i < numberOfSuppliers; i++){
             if(suppliers[i].isOpen()){
                 for(int j = 0; j < numberOfClients; j++){
@@ -198,32 +202,98 @@ void service::Algorithm2() {
                 }
             }
             else{
+                sort(S, 0, static_cast<int>(S.size()), i);
 
+                tmp = betaConst(i,T, this->getO());
+                double tmp2 = tmp;
+                vector<int> Y;
+                do{
+                    if(!Y.empty())
+                        tmp = static_cast<int>(tmp2 / Y.size());
+                    Y.push_back(S[Y.size()]);
+                    for(auto &j : Y)
+                    {
+                        tmp2 += this->getSupplier(i).getConnexionCost(j);
+                    }
+                }while(tmp2/Y.size() < tmp);
+
+                if(tmp2 < beta){
+                    betaIndex = i;
+                    betaY = Y;
+                }
             }
         }
-        betaIndex = alphaIndex + 1;
 
+        if(alpha <= beta)
+        {
+            for(int i = 0; i < S.size(); i++){
+                if(S[i] == alphaIndex)
+                {
+                    S[i] = S.back();
+                    S.pop_back();
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < S.size(); i++){
+                for(auto &y : betaY)
+                {
+                    if(S[i] == y)
+                    {
+                        S[i] = S.back();
+                        S.pop_back();
+                    }
+                }
+            }
+            this->openSupplier(betaIndex);
+        }
     }
 
 
 }
 
-int service::beta(int i, vector<int> S, vector<int> T, vector<int> Y, vector<int> O) {
-    int result = 2 * this->suppliers[i].getOpeningCost();
+double service::betaConst(int i, vector<int> T, vector<int> O) {
+    double result = 2 * this->suppliers[i].getOpeningCost();
     int min = INFINITY;
     for(auto &j : T){
         for(auto &o : O){
             if(min < this->suppliers[o].getConnexionCost(j))
                 min = this->suppliers[o].getConnexionCost(j);
         }
-        result -= (min - this->suppliers[i].getConnexionCost(j));
+        if(min > 0)
+            result -= (min - this->suppliers[i].getConnexionCost(j));
     }
-
-    for(auto &j : Y){
-        result += this->suppliers[i].getConnexionCost(j);
-    }
-    return result/Y.size();
 }
+
+void service::sort(vector<int> S, int left, int right, int f) {
+    int i = left, j = right;
+    int tmp;
+    int pivot = this->getSupplier(f).getConnexionCost(S[(left + right) / 2]);
+
+    /* partition */
+    while (i <= j) {
+        while (this->getSupplier(f).getConnexionCost(S[i]) < pivot)
+            i++;
+        while (this->getSupplier(f).getConnexionCost(S[j]) > pivot)
+            j--;
+        if (i <= j) {
+            tmp = S[i];
+            S[i] = S[j];
+            S[j] = tmp;
+            i++;
+            j--;
+        }
+    };
+
+    /* recursion */
+    if (left < j)
+        sort(S, left, j, f);
+    if (i < right)
+        sort(S, i, right, f);
+}
+
+
 
 
 
