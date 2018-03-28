@@ -1,3 +1,1 @@
-C:\Users\Raphael\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\173.4674.29\bin\cmake\bin\cmake.exe -E remove -f CMakeFiles\TPAPG.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\TPAPG.dir/objects.a @CMakeFiles\TPAPG.dir\objects1.rsp
-C:\MinGW\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\TPAPG.dir/objects.a -Wl,--no-whole-archive  -o TPAPG.exe -Wl,--out-implib,libTPAPG.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\TPAPG.dir\linklibs.rsp
+/usr/bin/c++  -g   CMakeFiles/TPAPG.dir/main.cpp.o CMakeFiles/TPAPG.dir/service.cpp.o CMakeFiles/TPAPG.dir/supplier.cpp.o  -o TPAPG 

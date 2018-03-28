@@ -1,0 +1,6 @@
+B1.01
+Algo1:(valeur,liste)=(22515,[1,2,4,10,45,47,]) in 0.012459sec
+Algo2-2*fi:(valeur,liste)=(22602,[1,4,22,40,47,]) in 0.074352sec
+Algo2-1*fi:(valeur,liste)=(21864,[1,4,10,22,47,49,]) in 0.078341sec
+Algo3-2*fi:(valeur,liste)=(24400,[4,10,45,47,]) in 0.010665sec
+Algo3-1*fi:(valeur,liste)=(21864,[1,4,10,22,47,49,]) in 0.010948sec

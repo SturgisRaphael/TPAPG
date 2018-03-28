@@ -13,10 +13,6 @@ service::service(int numberOfSuppliers, int numberOfClients) : numberOfSuppliers
     this->suppliers= static_cast<supplier *>(malloc(numberOfSuppliers * sizeof(supplier)));
 }
 
-service::~service() {
-    free(suppliers);
-}
-
 int service::getNumberOfSuppliers() const {
     return numberOfSuppliers;
 }
@@ -175,7 +171,7 @@ void service::Algorithm2(int f) {
 
     while(S.size() > 0){
         service::alpha alpha = service::alpha(*this, S);
-        service::beta beta = service::beta(this, S, f);
+        service::beta beta = service::beta(this, S, f, true);
         //cout << "alpha = " << alpha.getValue() << "|beta = " << beta.getValue() << endl;
         if(alpha.getValue() <= beta.getValue()){
             for(int s = 0; s < S.size(); s++)
@@ -256,31 +252,34 @@ service::alpha::alpha(service &parent, const vector<int> &S) : parent(parent), S
     }
 }
 
-service::beta::beta(service *parent, vector<int> &S, int f) : parent(parent), S(S) {
-    value = INFINITY;
-    index = -1;
-    vector<int> T;
-    for(int o = 0; o < parent->getNumberOfClients(); o++)
+service::beta::beta(service *parent, vector<int> &S, int f, bool calc) : parent(parent), S(S) {
+    if(calc)
     {
-        bool in = false;
-        for(int s : S){
-            if(s == o)
-                in = true;
+        value = INFINITY;
+        index = -1;
+        vector<int> T;
+        for(int o = 0; o < parent->getNumberOfClients(); o++)
+        {
+            bool in = false;
+            for(int s : S){
+                if(s == o)
+                    in = true;
+            }
+            if(!in)
+                T.push_back(o);
         }
-        if(!in)
-            T.push_back(o);
-    }
-    for(int i = 0; i < parent->getNumberOfSuppliers(); i++)
-    {
-        vector<int> YTmp;
-        if(!parent->getSupplier(i).isOpen()){
-            double valueTmp = betaCalc(i, f, T, YTmp, false);
-            if(valueTmp < value)
-            {
-                value = valueTmp;
-                index = i;
-                YTmp.pop_back();
-                Y = YTmp;
+        for(int i = 0; i < parent->getNumberOfSuppliers(); i++)
+        {
+            vector<int> YTmp;
+            if(!parent->getSupplier(i).isOpen()){
+                double valueTmp = betaCalc(i, f, T, YTmp, false);
+                if(valueTmp < value)
+                {
+                    value = valueTmp;
+                    index = i;
+                    YTmp.pop_back();
+                    Y = YTmp;
+                }
             }
         }
     }
@@ -330,7 +329,7 @@ double service::beta::betaCalc(int i, int f, vector<int> T, vector<int> &YTmp, b
     }
     valueTmp -= sum;
     parent->sort(S, 0, S.size() - 1, i);
-    double pred_value = valueTmp, val = 0;
+    double pred_value = INFINITY, val = 0;
     for (int r : S) {
         val = valueTmp;
         YTmp.push_back(r);
@@ -349,6 +348,7 @@ double service::beta::betaCalc(int i, int f, vector<int> T, vector<int> &YTmp, b
         this->value = valueTmp;
         this->Y = YTmp;
     }
+    //cout << valueTmp << endl;
     return valueTmp;
 }
 
@@ -366,27 +366,46 @@ void service::Algorithme3(int f) {
     for(int i = 0; i < numberOfSuppliers; i++)
     {
         vector<int> tmp;
-        beta tmpB = service::beta(this, S, f);
-        //cout << tmpB.betaCalc(i, f, S_bis, tmp, true) << endl;
+        beta tmpB = service::beta(this, S, f, false);
+        tmpB.betaCalc(i, f, S_bis, tmp, true);
         T.push_back(stackElm(tmpB));
     }
 
-    while(!T.empty() /*&& !S.empty()*/){
+    while(!T.empty()){
         stackElm x = T.back();
+        double valMin;
+        if (x.isIsBeta())
+            valMin = x.getBetaValue().getValue();
+        else
+            valMin = x.getCValue();
+        int indT = 0;
         for(int t = 0; t < T.size(); t++) {
             if (T[t].isIsBeta()) {
-                if (T[t].getBetaValue().getValue() < x.getBetaValue().getValue()) {
+                if((T[t].getBetaValue().getValue() < valMin))
+                {
+                    valMin = T[t].getBetaValue().getValue();
                     x = T[t];
-                    T[t] = T.back();
-
+                    indT = t;
                 }
             }
+            else
+            {
+                if((T[t].getCValue() < valMin))
+                {
+                    valMin = T[t].getCValue();
+                    x = T[t];
+                    indT = t;
+                }
+            }
+
         }
+        x = T[indT];
+        T[indT] = T.back();
         T.pop_back();
-        if(x.isIsBeta())
+        if(x.isIsBeta() && !S.empty())
         {
             vector<int> tmp;
-            beta tmpB = service::beta(this,S,f);
+            beta tmpB = service::beta(this,S,f, false);
             tmpB.betaCalc(x.getBetaValue().getIndex(), f, S_bis, tmp, true);
             if(x.getBetaValue().getValue() == tmpB.getValue()){
                 this->openSupplier(x.getBetaValue().getIndex());
@@ -402,10 +421,10 @@ void service::Algorithme3(int f) {
                     }
                 }
                 for(int j : S)
-                    T.push_back(stackElm(this->getSupplier(x.getBetaValue().getIndex()).getConnexionCost(j),x.getBetaValue().getIndex(), j, tmpB));
+                    T.emplace_back(stackElm(this->getSupplier(x.getBetaValue().getIndex()).getConnexionCost(j),x.getBetaValue().getIndex(), j, tmpB));
             } else
             {
-                T.push_back(stackElm(tmpB));
+                T.emplace_back(tmpB);
             }
         } else{
             for(int s = 0; s < S.size(); s++)

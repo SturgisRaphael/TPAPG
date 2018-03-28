@@ -106,9 +106,10 @@ void affichage(string nameOfService, service service1){
 int main(int argc, char* argv[]) {
     ifstream input;
     //input.open( "../Test/BildeKrarup/B/B1.1" );
-    input.open("D:\\Raphael\\Programing\\Git\\TPAPG\\Test\\BildeKrarup\\B\\B1.1");
+    //input.open("D:\\Raphael\\Programing\\Git\\TPAPG\\Test\\BildeKrarup\\B\\B1.1");
     //input.open( "../Test/test" );
     //input.open("D:\\Raphael\\Programing\\Git\\TPAPG\\Test\\test");
+    input.open(argv[1]);
     string line, nameOfService;
     int numberOfSuppliers, numberOfClients, id, costOpening, tmp;
 
@@ -119,7 +120,7 @@ int main(int argc, char* argv[]) {
 
     getline( input, line );
 
-    nameOfService = line.substr(line.find(": ") + 2 );
+    nameOfService = argv[1];
 
     input >> numberOfSuppliers >> numberOfClients >> tmp;
 

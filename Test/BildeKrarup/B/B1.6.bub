@@ -1,0 +1,6 @@
+B1.6
+Algo1:(valeur,liste)=(21512,[4,7,20,36,39,]) in 0.011221sec
+Algo2-2*fi:(valeur,liste)=(21755,[4,7,20,36,]) in 0.088491sec
+Algo2-1*fi:(valeur,liste)=(21014,[4,7,20,36,43,]) in 0.086857sec
+Algo3-2*fi:(valeur,liste)=(21755,[4,7,20,36,]) in 0.009927sec
+Algo3-1*fi:(valeur,liste)=(21014,[4,7,20,36,43,]) in 0.012032sec

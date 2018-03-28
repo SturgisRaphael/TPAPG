@@ -1,0 +1,11 @@
+Lancer le programme:
+$./cmake-build-debug/TPAPG [fichier_a ressoudre]
+
+Lancer sur toute les instances du dossier test:
+$cd cmake-build-debug/
+$./test.sh
+
+compiler le programme:
+$cd cmake-build-debug/
+$make clean
+$make

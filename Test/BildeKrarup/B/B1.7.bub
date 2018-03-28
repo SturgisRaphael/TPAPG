@@ -1,0 +1,6 @@
+B1.7
+Algo1:(valeur,liste)=(23204,[15,27,29,35,36,48,49,]) in 0.015008sec
+Algo2-2*fi:(valeur,liste)=(23360,[3,15,29,35,45,]) in 0.085877sec
+Algo2-1*fi:(valeur,liste)=(22293,[3,4,15,27,29,35,45,]) in 0.078655sec
+Algo3-2*fi:(valeur,liste)=(23360,[3,15,29,35,45,]) in 0.011899sec
+Algo3-1*fi:(valeur,liste)=(22339,[3,15,29,35,36,45,]) in 0.013151sec

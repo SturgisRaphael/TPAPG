@@ -45,7 +45,7 @@ public:
         beta(service *parent);
 
     public:
-        beta(service *parent, vector<int> &S, int f);
+        beta(service *parent, vector<int> &S, int f, bool calc);
 
         friend ostream &operator<<(ostream &os, const beta &beta);
 
@@ -96,8 +96,6 @@ public:
     void openSupplier(int i);
 
     friend std::ostream &operator<<(std::ostream &os, const service &service1);
-
-    virtual ~service();
 
     int evaluate();
 
