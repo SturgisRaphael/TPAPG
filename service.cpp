@@ -76,9 +76,7 @@ int service::evaluate(int *O, int size){
 
     for(int i = 0; i < size; i++){
         result += suppliers[O[i]].getOpeningCost();
-        //printf("%d, ", O[i]);
     }
-    //printf("\n");
 
     for(int j = 0; j < numberOfClients; j++){
         int min = suppliers[0].getConnexionCost(j);
@@ -145,18 +143,11 @@ void service::closeAllSupplier() {
 }
 
 vector<int> service::getO() {
-    int count = 0;
-    for (int i = 0; i < numberOfSuppliers; i++)
-        if (suppliers[i].isOpen())
-            count++;
     vector<int> O;
 
-    printf("count = %d\n", count);
-    count = 0;
     for (int i = 0; i < numberOfSuppliers; i++)
         if (suppliers[i].isOpen()) {
             O.push_back(i);
-            count++;
         }
 
     O.push_back(-1);
@@ -174,99 +165,46 @@ void service::printO() {
     }
     printf("\n");
 }
-void service::Algorithm2() {
+void service::Algorithm2(int f) {
     closeAllSupplier();
     vector<int> S;
     vector<int> T;
-    int nbUnaffectedClients = numberOfClients;
 
     for(int i = 0; i < numberOfClients; i++)
-        S[i] = i;
+        S.push_back(i);
 
-    while(nbUnaffectedClients > 0){
-        int alpha = INFINITY;
-        int beta = INFINITY;
-        vector<int> betaY;
-        int alphaIndex = -1;
-        int betaIndex = -1;
-        double tmp;
-        for(int i = 0; i < numberOfSuppliers; i++){
-            if(suppliers[i].isOpen()){
-                for(int j = 0; j < numberOfClients; j++){
-                    if(S[i] != -1){
-                        if(alpha < suppliers[i].getConnexionCost(j)){
-                            alpha = suppliers[i].getConnexionCost(j);
-                            alphaIndex = j;
-                        }
-                    }
-                }
-            }
-            else{
-                sort(S, 0, static_cast<int>(S.size()), i);
-
-                tmp = betaConst(i,T, this->getO());
-                double tmp2 = tmp;
-                vector<int> Y;
-                do{
-                    if(!Y.empty())
-                        tmp = static_cast<int>(tmp2 / Y.size());
-                    Y.push_back(S[Y.size()]);
-                    for(auto &j : Y)
-                    {
-                        tmp2 += this->getSupplier(i).getConnexionCost(j);
-                    }
-                }while(tmp2/Y.size() < tmp);
-
-                if(tmp2 < beta){
-                    betaIndex = i;
-                    betaY = Y;
-                }
-            }
-        }
-
-        if(alpha <= beta)
-        {
-            for(int i = 0; i < S.size(); i++){
-                if(S[i] == alphaIndex)
+    while(S.size() > 0){
+        service::alpha alpha = service::alpha(*this, S);
+        service::beta beta = service::beta(this, S, f);
+        //cout << "alpha = " << alpha.getValue() << "|beta = " << beta.getValue() << endl;
+        if(alpha.getValue() <= beta.getValue()){
+            for(int s = 0; s < S.size(); s++)
+            {
+                if(S[s] == alpha.getIndex())
                 {
-                    S[i] = S.back();
+                    S[s] = S.back();
                     S.pop_back();
+                    break;
                 }
             }
-        }
-        else
-        {
-            for(int i = 0; i < S.size(); i++){
-                for(auto &y : betaY)
-                {
-                    if(S[i] == y)
+        } else{
+            for(int s = 0; s < S.size(); s++)
+            {
+                for(auto &y : beta.getY())
+                    if(S[s] == y)
                     {
-                        S[i] = S.back();
+                        S[s] = S.back();
                         S.pop_back();
                     }
-                }
             }
-            this->openSupplier(betaIndex);
+            this->openSupplier(beta.getIndex());
         }
-    }
-
-
-}
-
-double service::betaConst(int i, vector<int> T, vector<int> O) {
-    double result = 2 * this->suppliers[i].getOpeningCost();
-    int min = INFINITY;
-    for(auto &j : T){
-        for(auto &o : O){
-            if(min < this->suppliers[o].getConnexionCost(j))
-                min = this->suppliers[o].getConnexionCost(j);
-        }
-        if(min > 0)
-            result -= (min - this->suppliers[i].getConnexionCost(j));
     }
 }
 
-void service::sort(vector<int> S, int left, int right, int f) {
+void service::sort(vector<int> &S, int left, int right, int f) {
+    if(left > right)
+        return;
     int i = left, j = right;
     int tmp;
     int pivot = this->getSupplier(f).getConnexionCost(S[(left + right) / 2]);
@@ -294,6 +232,218 @@ void service::sort(vector<int> S, int left, int right, int f) {
 }
 
 
+int service::alpha::getValue() const {
+    return value;
+}
 
+int service::alpha::getIndex() const {
+    return index;
+}
 
+service::alpha::alpha(service &parent, const vector<int> &S) : parent(parent), S(S) {
+    value = INFINITY;
+    index = -1;
+    for(int i = 0; i < parent.getNumberOfSuppliers(); i++)
+    {
+        if(parent.getSupplier(i).isOpen()){
+            for(auto &j : S){
+                if(value > parent.getSupplier(i).getConnexionCost(j)){
+                    value = parent.getSupplier(i).getConnexionCost(j);
+                    index = j;
+                }
+            }
+        }
+    }
+}
+
+service::beta::beta(service *parent, vector<int> &S, int f) : parent(parent), S(S) {
+    value = INFINITY;
+    index = -1;
+    vector<int> T;
+    for(int o = 0; o < parent->getNumberOfClients(); o++)
+    {
+        bool in = false;
+        for(int s : S){
+            if(s == o)
+                in = true;
+        }
+        if(!in)
+            T.push_back(o);
+    }
+    for(int i = 0; i < parent->getNumberOfSuppliers(); i++)
+    {
+        vector<int> YTmp;
+        if(!parent->getSupplier(i).isOpen()){
+            double valueTmp = betaCalc(i, f, T, YTmp, false);
+            if(valueTmp < value)
+            {
+                value = valueTmp;
+                index = i;
+                YTmp.pop_back();
+                Y = YTmp;
+            }
+        }
+    }
+}
+
+double service::beta::getValue() const {
+    return value;
+}
+
+int service::beta::getIndex() const {
+    return index;
+}
+
+const vector<int> &service::beta::getY() const {
+    return Y;
+}
+
+ostream &operator<<(ostream &os, const service::beta &beta) {
+    os << "value: " << beta.value << " index: " << beta.index << " Y:{";
+    for(auto &y : beta.Y)
+       os << y << ", ";
+    os << "}";
+    return os;
+}
+
+double service::beta::betaCalc(int i, int f, vector<int> T, vector<int> &YTmp, bool staticMode) {
+    if(staticMode)
+        this->index = i;
+    double valueTmp = f * (parent->getSupplier(i).getOpeningCost());
+    int sum = 0;
+    for(int &j : T){
+        int min = INFINITY;
+        for(int m = 0; m < parent->getNumberOfSuppliers(); m++)
+        {
+            if(parent->getSupplier(m).isOpen()){
+                if(parent->getSupplier(m).getConnexionCost(j) < min){
+                    min = parent->getSupplier(m).getConnexionCost(j);
+                }
+            }
+        }
+        if(min == INFINITY)
+            min = 0;
+        if(min - parent->getSupplier(i).getConnexionCost(j) > 0)
+        {
+            sum += min - parent->getSupplier(i).getConnexionCost(j);
+        }
+    }
+    valueTmp -= sum;
+    parent->sort(S, 0, S.size() - 1, i);
+    double pred_value = valueTmp, val = 0;
+    for (int r : S) {
+        val = valueTmp;
+        YTmp.push_back(r);
+        for(auto &y : YTmp){
+            val += parent->getSupplier(i).getConnexionCost(y);
+        }
+        if(pred_value < val/YTmp.size()){
+            break;
+        } else
+        {
+            pred_value = val/YTmp.size();
+        }
+    }
+    valueTmp = pred_value;
+    if(staticMode){
+        this->value = valueTmp;
+        this->Y = YTmp;
+    }
+    return valueTmp;
+}
+
+service::beta::beta(service *parent) : parent(parent) {}
+
+void service::Algorithme3(int f) {
+    closeAllSupplier();
+    vector<int> S;
+    vector<int> S_bis;
+    vector<stackElm> T;
+
+    for(int i = 0; i < numberOfClients; i++)
+        S.push_back(i);
+
+    for(int i = 0; i < numberOfSuppliers; i++)
+    {
+        vector<int> tmp;
+        beta tmpB = service::beta(this, S, f);
+        //cout << tmpB.betaCalc(i, f, S_bis, tmp, true) << endl;
+        T.push_back(stackElm(tmpB));
+    }
+
+    while(!T.empty() /*&& !S.empty()*/){
+        stackElm x = T.back();
+        for(int t = 0; t < T.size(); t++) {
+            if (T[t].isIsBeta()) {
+                if (T[t].getBetaValue().getValue() < x.getBetaValue().getValue()) {
+                    x = T[t];
+                    T[t] = T.back();
+
+                }
+            }
+        }
+        T.pop_back();
+        if(x.isIsBeta())
+        {
+            vector<int> tmp;
+            beta tmpB = service::beta(this,S,f);
+            tmpB.betaCalc(x.getBetaValue().getIndex(), f, S_bis, tmp, true);
+            if(x.getBetaValue().getValue() == tmpB.getValue()){
+                this->openSupplier(x.getBetaValue().getIndex());
+                for(int i = 0; i < S.size(); i++)
+                {
+                    for(int j : x.getBetaValue().getY()){
+                        if(S[i] == j){
+                            S_bis.push_back(S[i]);
+                            S[i] = S.back();
+                            S.pop_back();
+                            break;
+                        }
+                    }
+                }
+                for(int j : S)
+                    T.push_back(stackElm(this->getSupplier(x.getBetaValue().getIndex()).getConnexionCost(j),x.getBetaValue().getIndex(), j, tmpB));
+            } else
+            {
+                T.push_back(stackElm(tmpB));
+            }
+        } else{
+            for(int s = 0; s < S.size(); s++)
+            {
+                if(S[s] == x.getCj())
+                {
+                    S_bis.push_back(S[s]);
+                    S[s] = S.back();
+                    S.pop_back();
+                    break;
+                }
+            }
+        }
+    }
+}
+
+service::stackElm::stackElm(const service::beta &betaValue) : betaValue(betaValue) {isBeta = true;}
+
+service::stackElm::stackElm(int cValue, int ci, int cj, service::beta betaValue)
+        : cValue(cValue), ci(ci), cj(cj), betaValue(betaValue) { isBeta = false;}
+
+service::beta service::stackElm::getBetaValue(){
+    return betaValue;
+}
+
+int service::stackElm::getCValue()  {
+    return cValue;
+}
+
+int service::stackElm::getCi()  {
+    return ci;
+}
+
+int service::stackElm::getCj()  {
+    return cj;
+}
+
+bool service::stackElm::isIsBeta()  {
+    return isBeta;
+}
 

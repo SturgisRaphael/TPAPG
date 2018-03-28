@@ -13,7 +13,9 @@ fstream
 -
 sstream
 -
-array
+vector
+-
+ctime
 -
 supplier.h
 D:/Raphael/Programing/Git/TPAPG/supplier.h
@@ -29,6 +31,10 @@ cmath
 -
 service.h
 D:/Raphael/Programing/Git/TPAPG/service.h
+vector
+-
+algorithm
+-
 
 D:/Raphael/Programing/Git/TPAPG/service.h
 cstdlib
@@ -39,6 +45,10 @@ array
 -
 supplier.h
 D:/Raphael/Programing/Git/TPAPG/supplier.h
+vector
+-
+functional
+-
 
 D:/Raphael/Programing/Git/TPAPG/supplier.cpp
 supplier.h
