@@ -1,6 +1,0 @@
-B1.1
-Algo1:(valeur,liste)=(23468,[11,14,15,33,44,]) in 0.010501sec
-Algo2-2*fi:(valeur,liste)=(24922,[11,26,32,44,]) in 0.086461sec
-Algo2-1*fi:(valeur,liste)=(23932,[11,14,26,32,44,]) in 0.076897sec
-Algo3-2*fi:(valeur,liste)=(24922,[11,26,32,44,]) in 0.00988sec
-Algo3-1*fi:(valeur,liste)=(23932,[11,14,26,32,44,]) in 0.011634sec

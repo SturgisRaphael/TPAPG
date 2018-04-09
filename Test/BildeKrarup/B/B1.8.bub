@@ -1,6 +1,0 @@
-B1.8
-Algo1:(valeur,liste)=(20338,[1,5,18,22,34,]) in 0.010447sec
-Algo2-2*fi:(valeur,liste)=(20922,[1,5,22,34,]) in 0.076111sec
-Algo2-1*fi:(valeur,liste)=(20340,[1,5,22,33,34,]) in 0.081424sec
-Algo3-2*fi:(valeur,liste)=(20922,[1,5,22,34,]) in 0.01014sec
-Algo3-1*fi:(valeur,liste)=(20510,[1,5,22,25,34,]) in 0.010273sec

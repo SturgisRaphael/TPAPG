@@ -1,6 +1,0 @@
-B1.4
-Algo1:(valeur,liste)=(21641,[9,10,12,14,33,49,]) in 0.011183sec
-Algo2-2*fi:(valeur,liste)=(22854,[9,12,14,49,]) in 0.075699sec
-Algo2-1*fi:(valeur,liste)=(20747,[9,12,14,27,33,49,]) in 0.069632sec
-Algo3-2*fi:(valeur,liste)=(22854,[9,12,14,49,]) in 0.011409sec
-Algo3-1*fi:(valeur,liste)=(20747,[9,12,14,27,33,49,]) in 0.010841sec

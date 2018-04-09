@@ -1,0 +1,23 @@
+<service name='../Test/BildeKrarup/B/B1.1.opt'>
+<optimum>23468</optimum>
+<Algo1>
+<value>23468</value>
+<solution>11,14,15,33,44,</solution>
+<time>0.010228</time>
+<Algo2 f='2'>
+<value>24922</value>
+<solution>11,26,32,44,</solution>
+<time>0.085588</time>
+<Algo2 f='1'>
+<value>23932</value>
+<solution>11,14,26,32,44,</solution>
+<time>0.07488</time>
+<Algo3 f='2'>
+<value>24922</value>
+<solution>11,26,32,44,</solution>
+<time>0.009744</time>
+<Algo3 f='1'>
+<value>23932</value>
+<solution>11,14,26,32,44,</solution>
+<time>0.012143</time>
+</service>
